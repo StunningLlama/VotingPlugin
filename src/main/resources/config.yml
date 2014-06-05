@@ -1,0 +1,10 @@
+# votes:
+#   1:
+#     choices:
+#       yes:
+#         thepowderguy: 10
+#         zwei: 20
+#       no:
+#         Gilbat: 10
+#     disallowed:
+#       - dratini323
