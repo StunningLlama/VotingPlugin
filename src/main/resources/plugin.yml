@@ -2,3 +2,13 @@ name: ZweiAndPowdersVotePlugin
 version: 0
 main: io.thepowderguy.ZweiAndPowdersVotePlugin.ZweiAndPowdersVotePlugin
 commands:
+  vote:
+    usage: /vote <choice>
+  addvote:
+    usage: /createvote <duration in hours> <choice1, choice2, ...> <question>
+permissions:
+  vote.canvote:
+    default: false
+  vote.createvote:
+    default: false
+# vote.weight.[1-25]
