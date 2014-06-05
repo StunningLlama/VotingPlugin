@@ -1,0 +1,4 @@
+name: ZweiAndPowdersVotePlugin
+version: 0
+main: io.thepowderguy.ZweiAndPowdersVotePlugin.ZweiAndPowdersVotePlugin
+commands:
