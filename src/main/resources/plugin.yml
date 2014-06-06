@@ -5,7 +5,7 @@ commands:
   vote:
     usage: /vote <choice>
   addvote:
-    usage: /createvote <duration in hours> <choice1, choice2, ...> <question>
+    usage: /createvote <duration in hours> <choice1, choice2, ...> <disallowed players|none> <question>
 permissions:
   vote.canvote:
     default: false
