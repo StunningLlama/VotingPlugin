@@ -14,6 +14,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 	public void onEnable()
 	{
 		getServer().getPluginManager().registerEvents(new PlayerLoginHandler(this), this);
+		this.saveDefaultConfig();
 	}
 	@Override
 	public void onDisable()
@@ -27,14 +28,13 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		{
 			if(args.length < 4)
 			{
-				//sender sendmessage commandsyntax
-				return true;
+				return false;
 			}
  			long endtime;
  			try {
  				endtime = (long) ((System.currentTimeMillis() / 1000L) + (Double.valueOf(args[0]) * 3600));
  			} catch (NumberFormatException e) {
- 				sender.sendMessage("Invalid numbutt");
+ 				sender.sendMessage("Invalid number");
  				return true;
  			}
 			String[] choices = args[1].split(",");
@@ -51,8 +51,6 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  				tempQuestion.append(' ');
  			}
  			question = tempQuestion.substring(0, tempQuestion.length() - 2);
- 			
- 			
  			
  			String current = String.valueOf(this.getConfig().getInt("current-id") + 1);
  			this.getConfig().set("votes." + current + ".question", question);
@@ -71,24 +69,28 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				int currentId = getConfig().getInt("current-id"); 
 				if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L)
 				{
+					if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
+					{
+						sender.sendMessage(ChatColor.DARK_RED + "(You are not allowed to participate in this vote)");
+					}
 					String question = getConfig().getString(
 							"votes." + currentId + ".question");
 					Set<String> choices = getConfig().getConfigurationSection(
 							"votes." + currentId + ".choices").getKeys(false);
-					List<String> disallowedPlayers = getConfig().getStringList("votes." + currentId + ".disallowed");
 					sender.sendMessage(ChatColor.AQUA + "Question:");
 					sender.sendMessage(ChatColor.GRAY + question);
 					for (String i : choices) {
 						sender.sendMessage(ChatColor.RED + "- " + i);
 					}
-					if(!sender.hasPermission("vote.canvote") || disallowedPlayers.contains(sender.getName()))
-					{
-						sender.sendMessage(ChatColor.DARK_RED + "You are not allowed to participate in this vote.");
-					}
 					return true;
 				}
 				else
 				{
+					if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
+					{
+						sender.sendMessage(ChatColor.DARK_RED + "You are not allowed to participate in this vote.");
+						return true;
+					}
 					sender.sendMessage(ChatColor.RED + "There are currently no votes going on!");
 					return true;
 				}
@@ -111,20 +113,19 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		if(cmd.getName().equalsIgnoreCase("getres"))
 		{
 			int currentId = getConfig().getInt("current-id");
-			if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L)
+			Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
+			int choiceTotal;
+			for(String i : choices)
 			{
-				Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
-				for(String i : choices)
+				choiceTotal = 0;
+				Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
+				for(String j : voters)
 				{
-					Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
-					for(String j : voters)
-					{
-						int choiceTotal =+ getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
-						sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " weight points");
-					}
+					choiceTotal =+ getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
+					sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " weight points");
 				}
-				return true;
 			}
+			return true;
 		}
 		return false;
 	}
