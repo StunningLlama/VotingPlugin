@@ -63,40 +63,38 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  				this.getConfig().createSection("votes." + current + ".choices." + i);
  			}
  			this.getConfig().set("current-id", this.getConfig().getInt("current-id") + 1);
+ 			this.saveConfig();
  			return true;
 		}
 		if(cmd.getName().equalsIgnoreCase("vote"))
 		{
+			int currentId = getConfig().getInt("current-id"); 
+			if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L)
+			{
+				sender.sendMessage(ChatColor.RED + "There are currently no votes going on!");
+				return true;
+			}
+			if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
+			{
+				sender.sendMessage(ChatColor.DARK_RED + "You are not allowed to participate in this vote.");
+				return true;
+			}
 			if(args.length == 0)
 			{
-				int currentId = getConfig().getInt("current-id"); 
-				if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L)
+				if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
 				{
-					if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
-					{
-						sender.sendMessage(ChatColor.DARK_RED + "(You are not allowed to participate in this vote)");
-					}
-					String question = getConfig().getString(
-							"votes." + currentId + ".question");
-					Set<String> choices = getConfig().getConfigurationSection(
-							"votes." + currentId + ".choices").getKeys(false);
-					sender.sendMessage(ChatColor.AQUA + "Question:");
-					sender.sendMessage(ChatColor.GRAY + question);
-					for (String i : choices) {
-						sender.sendMessage(ChatColor.RED + "- " + i);
-					}
-					return true;
+					sender.sendMessage(ChatColor.DARK_RED + "(You are not allowed to participate in this vote)");
 				}
-				else
-				{
-					if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
-					{
-						sender.sendMessage(ChatColor.DARK_RED + "You are not allowed to participate in this vote.");
-						return true;
-					}
-					sender.sendMessage(ChatColor.RED + "There are currently no votes going on!");
-					return true;
+				String question = getConfig().getString(
+						"votes." + currentId + ".question");
+				Set<String> choices = getConfig().getConfigurationSection(
+						"votes." + currentId + ".choices").getKeys(false);
+				sender.sendMessage(ChatColor.AQUA + "Question:");
+				sender.sendMessage(ChatColor.GRAY + question);
+				for (String i : choices) {
+					sender.sendMessage(ChatColor.RED + "- " + i);
 				}
+				return true;
 			}
 			int weight = 1;
 			for (int i = 25; i > 0; i--)
@@ -109,7 +107,6 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			}
 			if (this.getConfig().contains("votes." + getConfig().getInt("current-id") + ".choices." + args[0]))
 			{
-				int currentId = getConfig().getInt("current-id");
 				Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
 				for(String i : choices)
 				{
@@ -120,15 +117,21 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 					}
 				}
 				this.getConfig().set("votes." + getConfig().getInt("current-id") + ".choices." + args[0] + "." + sender.getName(), weight);
-					
+				this.saveConfig();
 			}
 			else
+			{
 				sender.sendMessage(ChatColor.RED + "Your choice is invalid!");
+			}
 			return true;
 		}
 		if(cmd.getName().equalsIgnoreCase("getres"))
 		{
 			int currentId = getConfig().getInt("current-id");
+			if (!this.getConfig().contains("votes." + currentId))
+			{
+				sender.sendMessage("Error: no vote data available");
+			}
 			Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
 			int choiceTotal;
 			for(String i : choices)
@@ -145,8 +148,12 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		}
 		if(cmd.getName().equalsIgnoreCase("bcres"))
 		{
-			Bukkit.broadcastMessage(ChatColor.AQUA + "==== Vote results ===");
 			int currentId = getConfig().getInt("current-id");
+			if (!this.getConfig().contains("votes." + currentId))
+			{
+				sender.sendMessage("Error: no vote data available");
+			}
+			Bukkit.broadcastMessage(ChatColor.AQUA + "==== Vote results ===");
 			Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
 			int choiceTotal;
 			for(String i : choices)
@@ -165,6 +172,14 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		{
 			int currentId = getConfig().getInt("current-id");
 			getConfig().set("votes." + currentId + ".time-end", 0);
+			this.saveConfig();
+		}
+		if(cmd.getName().equalsIgnoreCase("dumpvotes"))
+		{
+			for (String i : this.getConfig().getConfigurationSection("votes").getKeys(false))
+				this.getConfig().set("votes." + i, null);
+			this.getConfig().set("current-id", 0);
+			this.saveConfig();
 		}
 		return false;
 	}
