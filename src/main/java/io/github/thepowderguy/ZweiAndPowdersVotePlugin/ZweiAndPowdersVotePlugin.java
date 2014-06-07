@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 	@Override
@@ -72,5 +73,15 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			}
 		}
 		return false;
+	}
+}
+
+
+
+class endOfVoteChecker extends BukkitRunnable
+{
+	public void run()
+	{
+		//check if vote is coming to an end
 	}
 }
