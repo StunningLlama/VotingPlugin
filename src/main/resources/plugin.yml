@@ -1,14 +1,17 @@
 name: ZweiAndPowdersVotePlugin
-version: 0
+version: 1
 main: io.thepowderguy.ZweiAndPowdersVotePlugin.ZweiAndPowdersVotePlugin
 commands:
   vote:
-    usage: /vote <choice>
-  addvote:
-    usage: /createvote <duration in hours> <choice1,choice2,...> <disallowed player 1,disallowed player 2,...|none> <question>
-permissions:
-  vote.canvote:
-    default: false
-  vote.createvote:
-    default: false
+    usage: /vote [choice]
+    permission: vote.canvote
+  createvote:
+    usage: "/createvote <duration in hours> <choice list> <disallowed player list|none> <question> (lists are separated by commas, no spaces. example: 1,2,3)
+    permission: vote.createvote
+  getres:
+    usage: /getres
+    permission: vote.getres
+  bcres:
+    usage: /bcres
+    permission: vote.bcres
 # vote.weight.[1-25]
