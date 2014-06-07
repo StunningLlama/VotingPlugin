@@ -32,11 +32,16 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			{
 				return false;
 			}
+			if(getConfig().getInt("votes." + getConfig().getInt("current-id") + ".time-end") > System.currentTimeMillis() / 1000L)
+			{
+				sender.sendMessage(ChatColor.RED + "Error: a vote is already in progress Please stop the current vote to continue.");
+				return true;
+			}
  			long endtime;
  			try {
  				endtime = (long) ((System.currentTimeMillis() / 1000L) + (Double.valueOf(args[0]) * 3600));
  			} catch (NumberFormatException e) {
- 				sender.sendMessage("Invalid number");
+ 				sender.sendMessage(ChatColor.RED + "Invalid number");
  				return true;
  			}
 			String[] choices = args[1].split(",");
@@ -64,6 +69,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  			}
  			this.getConfig().set("current-id", this.getConfig().getInt("current-id") + 1);
  			this.saveConfig();
+ 			sender.sendMessage("Created vote!");
  			return true;
 		}
 		if(cmd.getName().equalsIgnoreCase("vote"))
@@ -118,6 +124,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				}
 				this.getConfig().set("votes." + getConfig().getInt("current-id") + ".choices." + args[0] + "." + sender.getName(), weight);
 				this.saveConfig();
+				sender.sendMessage("Voted for" + args[0] + ".");
 			}
 			else
 			{
@@ -133,6 +140,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				sender.sendMessage("Error: no vote data available");
 			}
 			Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
+			sender.sendMessage(ChatColor.AQUA + "Question: " + getConfig().getString("votes." + currentId + ".question"));
 			int choiceTotal;
 			for(String i : choices)
 			{
@@ -155,6 +163,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			}
 			Bukkit.broadcastMessage(ChatColor.AQUA + "==== Vote results ===");
 			Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
+			Bukkit.broadcastMessage(ChatColor.AQUA + "Question: " + getConfig().getString("votes." + currentId + ".question"));
 			int choiceTotal;
 			for(String i : choices)
 			{
@@ -173,6 +182,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			int currentId = getConfig().getInt("current-id");
 			getConfig().set("votes." + currentId + ".time-end", 0);
 			this.saveConfig();
+			sender.sendMessage("Ended current vote.");
 		}
 		if(cmd.getName().equalsIgnoreCase("dumpvotes"))
 		{
@@ -180,6 +190,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				this.getConfig().set("votes." + i, null);
 			this.getConfig().set("current-id", 0);
 			this.saveConfig();
+			sender.sendMessage("Dumped all vote info.");
 		}
 		return false;
 	}
