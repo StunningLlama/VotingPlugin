@@ -1,6 +1,6 @@
 name: ZweiAndPowdersVotePlugin
 version: 1
-main: io.thepowderguy.ZweiAndPowdersVotePlugin.ZweiAndPowdersVotePlugin
+main: io.github.thepowderguy.ZweiAndPowdersVotePlugin.ZweiAndPowdersVotePlugin
 commands:
   vote:
     usage: /vote [choice]
@@ -14,4 +14,10 @@ commands:
   bcres:
     usage: /bcres
     permission: vote.bcres
+  endvote:
+    usage: /endvote
+    permission: vote.endvote
+  dumpvotes:
+    usage: /dumpvotes
+    permission: vote.dumpvotes
 # vote.weight.[1-25]
