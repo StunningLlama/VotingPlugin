@@ -52,7 +52,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  				tempQuestion.append(args[i]);
  				tempQuestion.append(' ');
  			}
- 			question = tempQuestion.substring(0, tempQuestion.length() - 2);
+ 			question = tempQuestion.substring(0, tempQuestion.length() - 1);
  			
  			String current = String.valueOf(this.getConfig().getInt("current-id") + 1);
  			this.getConfig().set("votes." + current + ".question", question);
@@ -74,11 +74,6 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				sender.sendMessage(ChatColor.RED + "There are currently no votes going on!");
 				return true;
 			}
-			if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
-			{
-				sender.sendMessage(ChatColor.DARK_RED + "You are not allowed to participate in this vote.");
-				return true;
-			}
 			if(args.length == 0)
 			{
 				if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
@@ -94,6 +89,11 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				for (String i : choices) {
 					sender.sendMessage(ChatColor.RED + "- " + i);
 				}
+				return true;
+			}
+			if(!sender.hasPermission("vote.canvote") || getConfig().getStringList("votes." + currentId + ".disallowed").contains(sender.getName()))
+			{
+				sender.sendMessage(ChatColor.DARK_RED + "You are not allowed to participate in this vote.");
 				return true;
 			}
 			int weight = 1;
