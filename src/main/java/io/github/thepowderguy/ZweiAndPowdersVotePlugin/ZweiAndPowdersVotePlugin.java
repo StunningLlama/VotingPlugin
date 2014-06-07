@@ -14,7 +14,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 	@Override
 	public void onEnable()
 	{
-		// We might need something here later
+		getServer().getPluginManager().registerEvents(new PlayerLoginHandler(null), this);
 	}
 	@Override
 	public void onDisable()
@@ -70,7 +70,8 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			if(args.length == 0)
 			{
 				int currentId = getConfig().getInt("current-id"); 
-				if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L) {
+				if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L)
+				{
 					String question = getConfig().getString(
 							"votes." + currentId + ".question");
 					Set<String> choices = getConfig().getConfigurationSection(
@@ -96,7 +97,6 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		return false;
 	}
 }
-
 
 
 class endOfVoteChecker extends BukkitRunnable
