@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -123,6 +124,24 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				{
 					choiceTotal =+ getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
 					sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " weight points");
+				}
+			}
+			return true;
+		}
+		if(cmd.getName().equalsIgnoreCase("bcres"))
+		{
+			Bukkit.broadcastMessage(ChatColor.AQUA + "==== Vote results ===");
+			int currentId = getConfig().getInt("current-id");
+			Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
+			int choiceTotal;
+			for(String i : choices)
+			{
+				choiceTotal = 0;
+				Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
+				for(String j : voters)
+				{
+					choiceTotal =+ getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
+					Bukkit.broadcastMessage(ChatColor.AQUA + "[vote] " + i + ": " + choiceTotal + " weight points");
 				}
 			}
 			return true;
