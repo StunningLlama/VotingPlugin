@@ -14,7 +14,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 	@Override
 	public void onEnable()
 	{
-		getServer().getPluginManager().registerEvents(new PlayerLoginHandler(this), this);
+		getServer().getPluginManager().registerEvents(new PlayerLoginHandler(null), this);
 	}
 	@Override
 	public void onDisable()
@@ -91,18 +91,24 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				else
 				{
 					sender.sendMessage(ChatColor.RED + "There are currently no votes going on!");
+					return true;
 				}
 			}
+			int weight = 1;
+			for (int i = 25; i > 0; i--)
+			{
+				if (sender.hasPermission("vote.weight." + String.valueOf(i)))
+				{
+					weight = i;
+					break;
+				}
+			}
+			if (this.getConfig().contains("votes." + getConfig().getInt("current-id") + ".choices." + args[0]))
+				this.getConfig().set("votes." + getConfig().getInt("current-id") + ".choices." + args[0] + "." + sender.getName(), weight);
+			else
+				sender.sendMessage(ChatColor.RED + "Your choice is invalid!");
+			return true;
 		}
 		return false;
-	}
-}
-
-
-class endOfVoteChecker extends BukkitRunnable
-{
-	public void run()
-	{
-		//check if vote is coming to an end
 	}
 }
