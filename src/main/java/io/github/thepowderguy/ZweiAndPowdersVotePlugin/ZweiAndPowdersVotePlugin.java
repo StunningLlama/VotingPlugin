@@ -70,7 +70,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			if(args.length == 0)
 			{
 				int currentId = getConfig().getInt("current-id"); 
-				if(getConfig().getInt("votes." + currentId + ".time-end") < System.currentTimeMillis() / 1000L) {
+				if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L) {
 					String question = getConfig().getString(
 							"votes." + currentId + ".question");
 					Set<String> choices = getConfig().getConfigurationSection(
@@ -86,6 +86,10 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 						sender.sendMessage(ChatColor.DARK_RED + "You are not allowed to participate in this vote.");
 					}
 					return true;
+				}
+				else
+				{
+					sender.sendMessage(ChatColor.RED + "There are currently no votes going on!");
 				}
 			}
 		}
