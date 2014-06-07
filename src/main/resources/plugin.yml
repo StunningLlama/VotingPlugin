@@ -6,7 +6,7 @@ commands:
     usage: /vote [choice]
     permission: vote.canvote
   createvote:
-    usage: "/createvote <duration in hours> <choice list> <disallowed player list|none> <question> (lists are separated by commas, no spaces. example: 1,2,3)
+    usage: "/createvote <duration in hours> <choice list> <disallowed player list|none> <question> (lists are separated by commas, no spaces. example: 1,2,3)"
     permission: vote.createvote
   getres:
     usage: /getres
