@@ -20,7 +20,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 	@Override
 	public void onDisable()
 	{
-		// We might need something here later
+		this.saveConfig();
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
@@ -62,6 +62,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  				this.getConfig().createSection("votes." + current + ".choices." + i);
  			}
  			this.getConfig().set("current-id", this.getConfig().getInt("current-id") + 1);
+ 			return true;
 		}
 		if(cmd.getName().equalsIgnoreCase("vote"))
 		{
@@ -99,14 +100,27 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			int weight = 1;
 			for (int i = 25; i > 0; i--)
 			{
-				if (sender.hasPermission("vote.weight." + String.valueOf(i)))
+				if (sender.isPermissionSet("vote.weight." + String.valueOf(i)))
 				{
 					weight = i;
 					break;
 				}
 			}
 			if (this.getConfig().contains("votes." + getConfig().getInt("current-id") + ".choices." + args[0]))
+			{
+				int currentId = getConfig().getInt("current-id");
+				Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
+				for(String i : choices)
+				{
+					Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
+					if (voters.contains(sender.getName()))
+					{
+						this.getConfig().set("votes." + currentId + ".choices." + i + "." + sender.getName(), null);
+					}
+				}
 				this.getConfig().set("votes." + getConfig().getInt("current-id") + ".choices." + args[0] + "." + sender.getName(), weight);
+					
+			}
 			else
 				sender.sendMessage(ChatColor.RED + "Your choice is invalid!");
 			return true;
@@ -122,9 +136,9 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
 				for(String j : voters)
 				{
-					choiceTotal =+ getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
-					sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " weight points");
+					choiceTotal += getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
 				}
+				sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " weight points");
 			}
 			return true;
 		}
@@ -140,9 +154,9 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
 				for(String j : voters)
 				{
-					choiceTotal =+ getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
-					Bukkit.broadcastMessage(ChatColor.AQUA + "[vote] " + i + ": " + choiceTotal + " weight points");
+					choiceTotal += getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
 				}
+				Bukkit.broadcastMessage(ChatColor.AQUA + "[vote] " + i + ": " + choiceTotal + " weight points");
 			}
 			return true;
 		}
