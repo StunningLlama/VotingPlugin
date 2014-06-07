@@ -9,7 +9,14 @@ public class ZweiAndPowdersVotePlugin extends JavaPlugin {
   {
 	  if (cmd.getName().equalsIgnoreCase("createvote"))
 	  {
-		  
+		  String[] choices = args[1].split(",");
+		  String[] disallowed;
+		  if (args[2].equalsIgnoreCase("none"))
+			  disallowed = null;
+		  else
+			  disallowed = args[2].split(",");
+		  long endtime = (long) ((System.currentTimeMillis() / 1000L) + (Double.valueOf(args[0]) * 3600));
+		  //TODO
 	  }
 	  return false;
   }
