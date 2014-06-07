@@ -2,7 +2,9 @@ package io.github.thepowderguy.ZweiAndPowdersVotePlugin;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -67,9 +69,24 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		{
 			if(args.length == 0)
 			{
-				// No matter what, send person question and choices
-				// if they are a disallowed player, tell them that they cannot vote
-				// PS add way to store question in config.yml
+				int currentId = getConfig().getInt("current-id"); 
+				if(getConfig().getInt("votes." + currentId + ".time-end") < System.currentTimeMillis() / 1000L) {
+					String question = getConfig().getString(
+							"votes." + currentId + ".question");
+					Set<String> choices = getConfig().getConfigurationSection(
+							"votes." + currentId + ".choices").getKeys(false);
+					List<String> disallowedPlayers = getConfig().getStringList("votes." + currentId + ".disallowed");
+					sender.sendMessage(ChatColor.AQUA + "Question:");
+					sender.sendMessage(ChatColor.GRAY + question);
+					for (String i : choices) {
+						sender.sendMessage(ChatColor.RED + "- " + i);
+					}
+					if(!sender.hasPermission("vote.canvote") || disallowedPlayers.contains(sender.getName()))
+					{
+						sender.sendMessage(ChatColor.DARK_RED + "You are not allowed to participate in this vote.");
+					}
+					return true;
+				}
 			}
 		}
 		return false;
