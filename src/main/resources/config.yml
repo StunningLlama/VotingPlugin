@@ -1,15 +1,16 @@
-# current-id: 1              // current vote number
-# votes:                     // list of previous votes, active & unactive
-#   1:                       // vote id
-#     time-end: 1402019075   // unix time of when this vote will end
-#     choices:               // map of all the choices
-#       yes:                 // choice
-#         thepowderguy: 10   // player: weight
-#         zwei: 20           // player: weight
-#       no:                  // choice
-#         Gilbat: 10         // player: weight
-#     disallowed:            // list of people who cannot vote
-#       - dratini323         // player
+# current-id: 1                          // current vote number
+# votes:                                 // list of previous votes, active & unactive
+#   1:                                   // vote id
+#     question: "Should drat be mod???"  // question
+#     time-end: 1402019075               // unix time of when this vote will end
+#     choices:                           // map of all the choices
+#       yes:                             // choice
+#         thepowderguy: 10               // player: weight
+#         zwei: 20                       // player: weight
+#       no:                              // choice
+#         Gilbat: 10                     // player: weight
+#     disallowed:                        // list of people who cannot vote
+#       - dratini323                     // player
 
-current-id: 1
+current-id: 0
 votes: {}
