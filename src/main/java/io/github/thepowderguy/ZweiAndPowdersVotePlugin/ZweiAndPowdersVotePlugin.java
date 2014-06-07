@@ -14,7 +14,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 	@Override
 	public void onEnable()
 	{
-		getServer().getPluginManager().registerEvents(new PlayerLoginHandler(null), this);
+		getServer().getPluginManager().registerEvents(new PlayerLoginHandler(this), this);
 	}
 	@Override
 	public void onDisable()
