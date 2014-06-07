@@ -161,6 +161,11 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			}
 			return true;
 		}
+		if(cmd.getName().equalsIgnoreCase("endvote"))
+		{
+			int currentId = getConfig().getInt("current-id");
+			getConfig().set("votes." + currentId + ".time-end", 0);
+		}
 		return false;
 	}
 }
