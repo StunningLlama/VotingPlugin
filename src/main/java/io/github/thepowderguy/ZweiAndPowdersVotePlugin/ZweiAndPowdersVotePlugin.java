@@ -1,5 +1,6 @@
 package io.github.thepowderguy.ZweiAndPowdersVotePlugin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -39,9 +40,9 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  				return true;
  			}
 			String[] choices = args[1].split(",");
- 			List<String> disallowed;
+ 			List<String> disallowed = new ArrayList<String>();
  			if (args[2].equalsIgnoreCase("none"))
- 				disallowed = null;
+ 				disallowed.add("$NONE");
  			else
  				disallowed = Arrays.asList(args[2].split(","));
  			StringBuilder tempQuestion = new StringBuilder();
