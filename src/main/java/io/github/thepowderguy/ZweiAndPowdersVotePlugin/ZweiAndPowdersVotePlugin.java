@@ -8,13 +8,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 	@Override
 	public void onEnable()
 	{
-		getServer().getPluginManager().registerEvents(new PlayerLoginHandler(null), this);
+		getServer().getPluginManager().registerEvents(new PlayerLoginHandler(this), this);
 	}
 	@Override
 	public void onDisable()
@@ -108,6 +107,24 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			else
 				sender.sendMessage(ChatColor.RED + "Your choice is invalid!");
 			return true;
+		}
+		if(cmd.getName().equalsIgnoreCase("getres"))
+		{
+			int currentId = getConfig().getInt("current-id");
+			if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L)
+			{
+				Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
+				for(String i : choices)
+				{
+					Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
+					for(String j : voters)
+					{
+						int choiceTotal =+ getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
+						sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " weight points");
+					}
+				}
+				return true;
+			}
 		}
 		return false;
 	}
