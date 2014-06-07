@@ -15,7 +15,7 @@ public final class PlayerLoginHandler implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		int currentId = plugin.getConfig().getInt("current-id");
-		if (!this.plugin.contains("votes." + currentId))
+		if (!this.plugin.getConfig().contains("votes." + currentId))
 		{
 			return;
 		}
