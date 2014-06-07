@@ -22,12 +22,9 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		{
 			if(args.length == 0)
 			{
-				// Send line showing question based on current question in config
-				// PS add a way to store current question in config
-				// send player list of choices based off of a list of values in votes.n.choices
-				// only do the above if player is allowed in the vote. If player is disallowed, then
-				// tell them the question followed by "You cannot vote in this poll"
-				// after all this, return true.
+				// No matter what, send person question and choices
+				// if they are a disallowed player, tell them that they cannot vote
+				// PS add way to store question in config.yml
 			}
 		}
 		return false;
