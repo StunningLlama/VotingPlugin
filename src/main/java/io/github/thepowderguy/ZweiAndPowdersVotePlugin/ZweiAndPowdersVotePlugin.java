@@ -69,7 +69,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		if(cmd.getName().equalsIgnoreCase("vote"))
 		{
 			int currentId = getConfig().getInt("current-id"); 
-			if(getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L)
+			if(getConfig().getInt("votes." + currentId + ".time-end") <= System.currentTimeMillis() / 1000L)
 			{
 				sender.sendMessage(ChatColor.RED + "There are currently no votes going on!");
 				return true;
