@@ -3,7 +3,7 @@ package io.github.thepowderguy.ZweiAndPowdersVotePlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public final class PlayerLoginHandler implements Listener {
 	ZweiAndPowdersVotePlugin plugin;
@@ -12,7 +12,7 @@ public final class PlayerLoginHandler implements Listener {
 		plugin = instance;
 	}
 	@EventHandler
-	public void onLogin(PlayerLoginEvent event)
+	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		int currentId = plugin.getConfig().getInt("current-id");
 		if(plugin.getConfig().getInt("votes." + currentId + ".time-end") > System.currentTimeMillis() / 1000L)
