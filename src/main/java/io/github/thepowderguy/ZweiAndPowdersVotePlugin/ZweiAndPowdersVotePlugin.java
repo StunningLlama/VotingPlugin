@@ -34,7 +34,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			}
 			if(getConfig().getInt("votes." + getConfig().getInt("current-id") + ".time-end") > System.currentTimeMillis() / 1000L)
 			{
-				sender.sendMessage(ChatColor.RED + "Error: a vote is already in progress Please stop the current vote to continue.");
+				sender.sendMessage(ChatColor.RED + "Error: a vote is already in progress. Please stop the current vote to continue.");
 				return true;
 			}
  			long endtime;
@@ -69,7 +69,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  			}
  			this.getConfig().set("current-id", this.getConfig().getInt("current-id") + 1);
  			this.saveConfig();
- 			sender.sendMessage("Created vote!");
+ 			sender.sendMessage(ChatColor.AQUA + "Created vote!");
  			return true;
 		}
 		if(cmd.getName().equalsIgnoreCase("vote"))
@@ -124,7 +124,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				}
 				this.getConfig().set("votes." + getConfig().getInt("current-id") + ".choices." + args[0] + "." + sender.getName(), weight);
 				this.saveConfig();
-				sender.sendMessage("Voted for" + args[0] + ".");
+				sender.sendMessage(ChatColor.GOLD + "Voted for" + args[0] + ".");
 			}
 			else
 			{
@@ -182,7 +182,23 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			int currentId = getConfig().getInt("current-id");
 			getConfig().set("votes." + currentId + ".time-end", 0);
 			this.saveConfig();
-			sender.sendMessage("Ended current vote.");
+			sender.sendMessage(ChatColor.AQUA + "Ended current vote.");
+			return true;
+		}
+		if(cmd.getName().equalsIgnoreCase("extendtime"))
+		{
+			int currentId = getConfig().getInt("current-id");
+			long endtime;
+ 			try {
+ 				endtime = (long) (getConfig().getInt("votes." + getConfig().getInt("current-id") + ".time-end") + (Double.valueOf(args[0]) * 3600));
+ 			} catch (NumberFormatException e) {
+ 				sender.sendMessage(ChatColor.RED + "Invalid number");
+ 				return true;
+ 			}
+ 			this.getConfig().set("votes." + currentId + ".time-end", endtime);
+			this.saveConfig();
+ 			sender.sendMessage(ChatColor.AQUA + "Increased vote duration.");
+			return true;
 		}
 		if(cmd.getName().equalsIgnoreCase("dumpvotes"))
 		{
@@ -190,7 +206,8 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				this.getConfig().set("votes." + i, null);
 			this.getConfig().set("current-id", 0);
 			this.saveConfig();
-			sender.sendMessage("Dumped all vote info.");
+			sender.sendMessage(ChatColor.AQUA + "Dumped all vote info.");
+			return true;
 		}
 		return false;
 	}
