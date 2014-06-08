@@ -17,6 +17,9 @@ commands:
   endvote:
     usage: /endvote
     permission: vote.endvote
+  extendtime:
+    usage: /extendtime <hours>
+    permission: vote.extendtime
   dumpvotes:
     usage: /dumpvotes
     permission: vote.dumpvotes
