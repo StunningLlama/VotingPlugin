@@ -44,20 +44,18 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  				sender.sendMessage(ChatColor.RED + "Invalid number");
  				return true;
  			}
-			String[] choices = args[1].split(",");
- 			List<String> disallowed = new ArrayList<String>();
- 			if (args[2].equalsIgnoreCase("none"))
- 				disallowed.add("$NONE");
- 			else
- 				disallowed = Arrays.asList(args[2].split(","));
- 			try {
-				if((Integer.valueOf(args[3]) == 0) || (Integer.valueOf(args[3]) == 1))
-				{
-					getConfig().set("votes." + getConfig().getInt("current-id") + ".use-weight", Integer.valueOf(args[3]));
-				}
-			} catch (NumberFormatException e) {
-				sender.sendMessage(ChatColor.RED + "Invalid number");
+			String[] choices = args[2].split(",");
+ 			List<String> disallowed = disallowed = Arrays.asList(args[3].split(","));
+ 			if (args[3].equalsIgnoreCase("weight")
+				getConfig().set("votes." + getConfig().getInt("current-id") + ".use-weight", true);
+			else if (args[3].equalsIgnoreCase("tally")
+				getConfig().set("votes." + getConfig().getInt("current-id") + ".use-weight", false);
+			else
+			{
+				sender.sendMessage(ChatColor.RED + "Invalid choice (weight or tally)");
+				return true;
 			}
+				
  			StringBuilder tempQuestion = new StringBuilder();
  			String question;
  			for (int i = 4; i < args.length; i++)
@@ -166,9 +164,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				}
 				else
 				{
-					for(int j = 0; j < voters.size(); j++) { // I'm a bit sketchy about using .size() in the String<Set>. To be fixed. May be bug
-						choiceTotal += 1;
-					}
+					choiceTotal = voters.size();
 					sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " votes");
 				}
 			}
@@ -201,11 +197,8 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				}
 				else
 				{
-					for (int j = 0; j < voters.size(); j++) {
-						choiceTotal += 1;
-					}
-					Bukkit.broadcastMessage(ChatColor.AQUA + "[vote] " + i
-							+ ": " + choiceTotal + " votes");
+					choiceTotal = voters.size();
+					Bukkit.broadcastMessage(ChatColor.AQUA + "[vote] " + i + ": " + choiceTotal + " votes");
 				}
 			}
 			return true;
