@@ -1,6 +1,5 @@
 package io.github.thepowderguy.ZweiAndPowdersVotePlugin;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -45,17 +44,18 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  				return true;
  			}
 			String[] choices = args[2].split(",");
- 			List<String> disallowed = disallowed = Arrays.asList(args[3].split(","));
- 			if (args[3].equalsIgnoreCase("weight")
-				getConfig().set("votes." + getConfig().getInt("current-id") + ".use-weight", true);
-			else if (args[3].equalsIgnoreCase("tally")
-				getConfig().set("votes." + getConfig().getInt("current-id") + ".use-weight", false);
+ 			List<String> disallowed = Arrays.asList(args[3].split(","));
+ 			int sponge = getConfig().getInt("currentId") + 1;
+ 			if (args[1].equalsIgnoreCase("weight"))
+				getConfig().set("votes." + sponge + ".use-weight", true);
+			else if (args[1].equalsIgnoreCase("tally"))
+				getConfig().set("votes." + sponge + ".use-weight", false);
 			else
 			{
 				sender.sendMessage(ChatColor.RED + "Invalid choice (weight or tally)");
 				return true;
 			}
-				
+
  			StringBuilder tempQuestion = new StringBuilder();
  			String question;
  			for (int i = 4; i < args.length; i++)
@@ -152,7 +152,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			{
 				choiceTotal = 0;
 				Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
-				if (getConfig().getInt("votes." + currentId + ".use-weight") == 1)
+				if (getConfig().getBoolean("votes." + currentId + ".use-weight") == true)
 				{
 					for (String j : voters) {
 						choiceTotal += getConfig().getInt(
@@ -185,7 +185,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			{
 				choiceTotal = 0;
 				Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
-				if (getConfig().getInt("votes." + currentId + ".use-weight") == 1)
+				if (getConfig().getBoolean("votes." + currentId + ".use-weight") == true)
 				{
 					for (String j : voters) {
 						choiceTotal += getConfig().getInt(
