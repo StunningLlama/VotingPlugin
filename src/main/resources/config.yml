@@ -3,6 +3,7 @@
 #   1:                                   // vote id
 #     question: "Should drat be mod???"  // question
 #     time-end: 1402019075               // unix time of when this vote will end
+#     use-weight: 1                      // a 1 or 0 representing wether or not to use weights in the vote
 #     choices:                           // map of all the choices
 #       yes:                             // choice
 #         thepowderguy: 10               // player: weight
