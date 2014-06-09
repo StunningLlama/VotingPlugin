@@ -50,9 +50,17 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  				disallowed.add("$NONE");
  			else
  				disallowed = Arrays.asList(args[2].split(","));
+ 			try {
+				if((Integer.valueOf(args[3]) == 0) || (Integer.valueOf(args[3]) == 1))
+				{
+					getConfig().set("votes." + getConfig().getInt("current-id") + ".use-weight", Integer.valueOf(args[3]));
+				}
+			} catch (NumberFormatException e) {
+				sender.sendMessage(ChatColor.RED + "Invalid number");
+			}
  			StringBuilder tempQuestion = new StringBuilder();
  			String question;
- 			for (int i = 3; i < args.length; i++)
+ 			for (int i = 4; i < args.length; i++)
  			{
  				tempQuestion.append(args[i]);
  				tempQuestion.append(' ');
@@ -124,7 +132,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 				}
 				this.getConfig().set("votes." + getConfig().getInt("current-id") + ".choices." + args[0] + "." + sender.getName(), weight);
 				this.saveConfig();
-				sender.sendMessage(ChatColor.GOLD + "Voted for" + args[0] + ".");
+				sender.sendMessage(ChatColor.AQUA + "Voted for " + args[0] + ".");
 			}
 			else
 			{
@@ -137,7 +145,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			int currentId = getConfig().getInt("current-id");
 			if (!this.getConfig().contains("votes." + currentId))
 			{
-				sender.sendMessage("Error: no vote data available");
+				sender.sendMessage(ChatColor.RED + "Error: no vote data available");
 			}
 			Set<String> choices = getConfig().getConfigurationSection("votes." + currentId + ".choices").getKeys(false);
 			sender.sendMessage(ChatColor.AQUA + "Question: " + getConfig().getString("votes." + currentId + ".question"));
@@ -146,11 +154,23 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			{
 				choiceTotal = 0;
 				Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
-				for(String j : voters)
+				if (getConfig().getInt("votes." + currentId + ".use-weight") == 1)
 				{
-					choiceTotal += getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
+					for (String j : voters) {
+						choiceTotal += getConfig().getInt(
+								"votes." + currentId + ".choices." + i + "."
+										+ j);
+					}
+					sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal
+							+ " weight points");
 				}
-				sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " weight points");
+				else
+				{
+					for(int j = 0; j < voters.size(); j++) { // I'm a bit sketchy about using .size() in the String<Set>. To be fixed. May be bug
+						choiceTotal += 1;
+					}
+					sender.sendMessage(ChatColor.AQUA + i + ": " + choiceTotal + " votes");
+				}
 			}
 			return true;
 		}
@@ -169,11 +189,24 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 			{
 				choiceTotal = 0;
 				Set<String> voters = getConfig().getConfigurationSection("votes." + currentId + ".choices." + i).getKeys(false);
-				for(String j : voters)
+				if (getConfig().getInt("votes." + currentId + ".use-weight") == 1)
 				{
-					choiceTotal += getConfig().getInt("votes." + currentId + ".choices." + i + "." + j);
+					for (String j : voters) {
+						choiceTotal += getConfig().getInt(
+								"votes." + currentId + ".choices." + i + "."
+										+ j);
+					}
+					Bukkit.broadcastMessage(ChatColor.AQUA + "[vote] " + i
+							+ ": " + choiceTotal + " weight points");
 				}
-				Bukkit.broadcastMessage(ChatColor.AQUA + "[vote] " + i + ": " + choiceTotal + " weight points");
+				else
+				{
+					for (int j = 0; j < voters.size(); j++) {
+						choiceTotal += 1;
+					}
+					Bukkit.broadcastMessage(ChatColor.AQUA + "[vote] " + i
+							+ ": " + choiceTotal + " votes");
+				}
 			}
 			return true;
 		}
@@ -188,16 +221,25 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
 		if(cmd.getName().equalsIgnoreCase("extendtime"))
 		{
 			int currentId = getConfig().getInt("current-id");
-			long endtime;
- 			try {
- 				endtime = (long) (getConfig().getInt("votes." + getConfig().getInt("current-id") + ".time-end") + (Double.valueOf(args[0]) * 3600));
- 			} catch (NumberFormatException e) {
- 				sender.sendMessage(ChatColor.RED + "Invalid number");
- 				return true;
- 			}
- 			this.getConfig().set("votes." + currentId + ".time-end", endtime);
-			this.saveConfig();
- 			sender.sendMessage(ChatColor.AQUA + "Increased vote duration.");
+			if (args.length > 0) {
+				long endtime;
+				try {
+					endtime = (long) (getConfig().getInt(
+							"votes." + getConfig().getInt("current-id")
+									+ ".time-end") + (Double.valueOf(args[0]) * 3600));
+				} catch (NumberFormatException e) {
+					sender.sendMessage(ChatColor.RED + "Invalid number");
+					return true;
+				}
+				this.getConfig().set("votes." + currentId + ".time-end",
+						endtime);
+				this.saveConfig();
+				sender.sendMessage(ChatColor.AQUA + "Increased vote duration.");
+			}
+			else
+			{
+				sender.sendMessage(ChatColor.AQUA + "/extendtime [Hours]");
+			}
 			return true;
 		}
 		if(cmd.getName().equalsIgnoreCase("dumpvotes"))
