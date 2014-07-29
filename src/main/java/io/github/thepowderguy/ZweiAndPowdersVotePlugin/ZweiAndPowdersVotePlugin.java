@@ -45,7 +45,7 @@ public final class ZweiAndPowdersVotePlugin extends JavaPlugin {
  			}
 			String[] choices = args[2].split(",");
  			List<String> disallowed = Arrays.asList(args[3].split(","));
- 			int sponge = getConfig().getInt("currentId") + 1;
+ 			int sponge = getConfig().getInt("current-id") + 1;
  			if (args[1].equalsIgnoreCase("weight"))
 				getConfig().set("votes." + sponge + ".use-weight", true);
 			else if (args[1].equalsIgnoreCase("tally"))
